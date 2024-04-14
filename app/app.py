@@ -25,10 +25,10 @@ with ui.sidebar(title="Filter controls", style="background-color: #F0FFFF; font-
         selected=["Adelie", "Gentoo", "Chinstrap"],
     )
 
-#Use ui.hr() to add a horizontal line on the display
+    #Use ui.hr() to add a horizontal line on the display
     ui.hr()
 
-#Add links with Source weblink, App weblink, Issues weblink, and more    
+    #Add links with Source weblink, App weblink, Issues weblink, and more    
     ui.h6("Links")
     ui.a(
         "GitHub Source",
@@ -66,7 +66,7 @@ with ui.layout_column_wrap(fill=False):
         def count():
             return filtered_df().shape[0]
 
-#Add value box with bill length with filtered data
+    #Add value box with bill length with filtered data
     with ui.value_box(showcase=icon_svg("ruler-horizontal"), style="background-color: #F0FFFF;"):
         "Average bill length"
 
@@ -74,7 +74,7 @@ with ui.layout_column_wrap(fill=False):
         def bill_length():
             return f"{filtered_df()['bill_length_mm'].mean():.1f} mm"
 
-#Add value box with bill depth with filtered data
+    #Add value box with bill depth with filtered data
     with ui.value_box(showcase=icon_svg("ruler-vertical"), style="background-color: #F0FFFF;"):
         "Average bill depth"
 
@@ -96,7 +96,7 @@ with ui.layout_columns():
                 hue="species",
             )
 
-#Add data frame with the Penguin data broken out in columns
+    #Add data frame with the Penguin data broken out in columns
     with ui.card(full_screen=True):
         ui.card_header("Penguin data", style="background-color: #F0FFFF;")
 
@@ -111,7 +111,6 @@ with ui.layout_columns():
             ]
             return render.DataGrid(filtered_df()[cols], filters=True)
 
-
 #ui.include_css(app_dir / "styles.css")
 
 #Add reactive calculator with input of species selected and filtered by body mass.
@@ -119,3 +118,4 @@ with ui.layout_columns():
 def filtered_df():
     filt_df = df[df["species"].isin(input.species())]
     filt_df = filt_df.loc[filt_df["body_mass_g"] < input.mass()]
+    return filt_df
