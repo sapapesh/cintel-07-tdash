@@ -1,16 +1,22 @@
+#Add functions to import
 import seaborn as sns
 from faicons import icon_svg
 
 from shiny import reactive
 from shiny.express import input, render, ui
+
+#Import the dataset
 import palmerpenguins 
 
+#Load the dataframe for Palmer Penguins
 df = palmerpenguins.load_penguins()
 
-ui.page_opts(title="Penguins dashboard", fillable=True)
+#Set up the Page Title
+ui.page_opts(title="Palmer Penguins Data Statistics", fillable=True)
 
-with ui.sidebar(title="Filter controls", style="background-color: #F0FFFF;"):
-
+#Add a sidebar, Use a subheading for additional details
+with ui.sidebar(title="Filter controls", style="background-color: #F0FFFF; font-family: 'Comic Sans MS';"):
+    ui.h2("Select the mass or species", class_="text-center")
     ui.input_slider("mass", "Mass", 2000, 6000, 6000)
     ui.input_checkbox_group(
         "species",
@@ -19,21 +25,24 @@ with ui.sidebar(title="Filter controls", style="background-color: #F0FFFF;"):
         selected=["Adelie", "Gentoo", "Chinstrap"],
     )
 
+#Use ui.hr() to add a horizontal line on the display
     ui.hr()
+
+#Add links with Source weblink, App weblink, Issues weblink, and more    
     ui.h6("Links")
     ui.a(
         "GitHub Source",
-        href="https://github.com/denisecase/cintel-07-tdash",
+        href="https://github.com/sapapesh/cintel-07-tdash",
         target="_blank",
     )
     ui.a(
         "GitHub App",
-        href="https://denisecase.github.io/cintel-07-tdash/",
+        href="sapapesh.github.io/cintel-07-tdash/",
         target="_blank",
     )
     ui.a(
         "GitHub Issues",
-        href="https://github.com/denisecase/cintel-07-tdash/issues",
+        href="https://github.com/sapapesh/cintel-07-tdash/issues",
         target="_blank",
     )
     ui.a("PyShiny", href="https://shiny.posit.co/py/", target="_blank")
@@ -48,7 +57,7 @@ with ui.sidebar(title="Filter controls", style="background-color: #F0FFFF;"):
         target="_blank",
     )
 
-
+#Add value box with number of penguins with filtered data
 with ui.layout_column_wrap(fill=False):
     with ui.value_box(showcase=icon_svg("earlybirds"), style="background-color: #F0FFFF;"):
         "Number of penguins"
@@ -57,6 +66,7 @@ with ui.layout_column_wrap(fill=False):
         def count():
             return filtered_df().shape[0]
 
+#Add value box with bill length with filtered data
     with ui.value_box(showcase=icon_svg("ruler-horizontal"), style="background-color: #F0FFFF;"):
         "Average bill length"
 
@@ -64,6 +74,7 @@ with ui.layout_column_wrap(fill=False):
         def bill_length():
             return f"{filtered_df()['bill_length_mm'].mean():.1f} mm"
 
+#Add value box with bill depth with filtered data
     with ui.value_box(showcase=icon_svg("ruler-vertical"), style="background-color: #F0FFFF;"):
         "Average bill depth"
 
@@ -71,7 +82,7 @@ with ui.layout_column_wrap(fill=False):
         def bill_depth():
             return f"{filtered_df()['bill_depth_mm'].mean():.1f} mm"
 
-
+#Add Scatterplot with the bill length and depth
 with ui.layout_columns():
     with ui.card(full_screen=True):
         ui.card_header("Bill length and depth", style="background-color: #F0FFFF;")
@@ -85,6 +96,7 @@ with ui.layout_columns():
                 hue="species",
             )
 
+#Add data frame with the Penguin data broken out in columns
     with ui.card(full_screen=True):
         ui.card_header("Penguin data", style="background-color: #F0FFFF;")
 
@@ -102,9 +114,8 @@ with ui.layout_columns():
 
 #ui.include_css(app_dir / "styles.css")
 
-
+#Add reactive calculator with input of species selected and filtered by body mass.
 @reactive.calc
 def filtered_df():
     filt_df = df[df["species"].isin(input.species())]
     filt_df = filt_df.loc[filt_df["body_mass_g"] < input.mass()]
-    return filt_df
