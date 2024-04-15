@@ -1,9 +1,11 @@
 #Add functions to import
 import seaborn as sns
+import plotly.express as px
 from faicons import icon_svg
 
 from shiny import reactive
 from shiny.express import input, render, ui
+from shinywidgets import render_plotly
 
 #Import the dataset
 import palmerpenguins 
@@ -85,15 +87,15 @@ with ui.layout_column_wrap(fill=False):
 #Add Scatterplot with the bill length and depth
 with ui.layout_columns():
     with ui.card(full_screen=True):
-        ui.card_header("Bill length and depth", style="background-color: #F0FFFF;")
+        ui.card_header("Plotly Histogram - Bill length and depth", style="background-color: #F0FFFF;")
 
-        @render.plot
-        def length_depth():
-            return sns.scatterplot(
-                data=filtered_df(),
-                x="bill_length_mm",
+        @render_plotly
+        def plot():
+            return px.histogram(
+                data_frame=filtered_df(),
+                x="bill_length_mm", 
                 y="bill_depth_mm",
-                hue="species",
+                color="species",
             )
 
     #Add data frame with the Penguin data broken out in columns
@@ -109,7 +111,8 @@ with ui.layout_columns():
                 "bill_depth_mm",
                 "body_mass_g",
             ]
-            return render.DataGrid(filtered_df()[cols], filters=True)
+            return render.DataGrid(filtered_df()[cols], filters=False)
+
 
 #ui.include_css(app_dir / "styles.css")
 
